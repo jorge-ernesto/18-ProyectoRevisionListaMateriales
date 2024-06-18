@@ -116,7 +116,7 @@
                 </tr>
                 <tr>
                     <th colspan="5" align="right" valign="middle">
-						<span class="fs12"><b>ID INTERNO:</b> </span>
+						<span class="fs12"><b>ID INTERNO:</b> ${params.bomrevision_data.id_interno}</span>
 					</th>
                 </tr>
                 <tr>
@@ -169,6 +169,15 @@
                     <td colspan="1" align="center"><b>Cantidad</b></td>
                     <td colspan="1" align="center"><b>UND</b></td>
                 </tr>
+                <#list params.bomrevision_data.dataDetalleRevisionListaMateriales as detrlm>
+                <tr>
+                    <td colspan="1" <#if detrlm.principio_activo = true>style="background-color: #D6DBDF; color: #000000"</#if>>${detrlm.articulo.codigo}</td>
+                    <td colspan="1" <#if detrlm.principio_activo = true>style="background-color: #D6DBDF; color: #000000"</#if>>${detrlm.articulo.descripcion}</td>
+                    <td colspan="1" align="center" <#if detrlm.principio_activo = true>style="background-color: #D6DBDF; color: #000000"</#if>>${detrlm.rendimiento_componentes} %</td>
+                    <td colspan="1" align="center" <#if detrlm.principio_activo = true>style="background-color: #D6DBDF; color: #000000"</#if>>${detrlm.cantidad_bom?string("#,##0.000")}</td> <!-- ?string("#,##0.000") -->
+                    <td colspan="1" align="center" <#if detrlm.principio_activo = true>style="background-color: #D6DBDF; color: #000000"</#if>>${detrlm.units}</td>
+                </tr>
+                </#list>
             </tbody>
         </table>
 

@@ -63,13 +63,22 @@ define(['./lib/Bio.Library.Helper', 'N'],
             });
 
             // Obtener data
+            let dataDetalleRevisionListaMateriales = objHelper.getDetalleRevisionListaMateriales(bomrevision_id);
+
+            // Debug
+            // objHelper.error_log('data', { dataDetalleRevisionListaMateriales });
+
+            // Obtener data
             let data = {
                 // Data
                 // Cabecera
+                id_interno: bomrevisionRecord.getValue('id'),
                 revision: bomrevisionRecord.getValue('name'),
                 memo: bomrevisionRecord.getValue('memo'),
                 lista: bomrevisionRecord.getText('billofmaterials'),
                 fecha_creacion: bomrevisionRecord.getText('createddate'),
+                // Detalle
+                dataDetalleRevisionListaMateriales: dataDetalleRevisionListaMateriales,
                 // Firmas
                 usuario_firma_emitido_por: bomrevisionRecord.getText('custrecord_bio_rlm_usu_fir_emitido_por'),
                 fecha_firma_emitido_por: bomrevisionRecord.getText('custrecord_bio_rlm_fec_fir_emitido_por'),

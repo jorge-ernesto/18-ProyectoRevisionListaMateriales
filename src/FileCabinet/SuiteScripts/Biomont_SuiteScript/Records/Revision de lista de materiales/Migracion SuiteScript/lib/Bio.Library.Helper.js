@@ -127,6 +127,94 @@ define(['N'],
 
         /****************** Data ******************/
 
+        function getDetalleRevisionListaMateriales(bomRevisionId) {
+
+            // Crear un array para almacenar los valores
+            let detalleRevisionListaMaterialesArray = [];
+
+            // Filtro de subsidiaria
+            if (!bomRevisionId) {
+                bomRevisionId = '@NONE@';
+            }
+
+            // Crear una búsqueda para obtener los registros
+            let searchObj = search.create({
+                type: 'bomrevision',
+                columns: [
+                    search.createColumn({
+                        name: "internalid",
+                        join: "component",
+                        label: "Componente : ID interno"
+                    }),
+                    search.createColumn({
+                        name: "item",
+                        join: "component",
+                        label: "Componente : Artículo"
+                    }),
+                    search.createColumn({
+                        name: "description",
+                        join: "component",
+                        label: "Componente : Descripción"
+                    }),
+                    search.createColumn({
+                        name: "componentyield",
+                        join: "component",
+                        label: "Componente : Rendimiento de componentes"
+                    }),
+                    search.createColumn({
+                        name: "bomquantity",
+                        join: "component",
+                        label: "Componente : Cantidad de BoM"
+                    }),
+                    search.createColumn({
+                        name: "units",
+                        join: "component",
+                        label: "Componente : Unidades"
+                    }),
+                    search.createColumn({
+                        name: "custrecord184",
+                        join: "component",
+                        label: "Componente : BIO_CAM_PRINCIPIO_ACTIVO (Personalizar)"
+                    })
+                ],
+                filters: [
+                    ["internalid", "anyof", bomRevisionId]
+                ]
+            });
+
+            // Ejecutar la búsqueda y recorrer los resultados
+            searchObj.run().each(function (result) {
+                // Obtener informacion
+                let { columns } = result;
+                let revision_lista_materiales_id_interno = result.getValue(columns[0]);
+                let articulo_id_interno = result.getValue(columns[1]);
+                let articulo_codigo = result.getText(columns[1]);
+                let articulo_descripcion = result.getValue(columns[2]);
+                let rendimiento_componentes = result.getValue(columns[3]);
+                let cantidad_bom = result.getValue(columns[4]);
+                let units = result.getValue(columns[5]);
+                let principio_activo = result.getValue(columns[6]);
+
+                // Procesar informacion
+                // Informacion que se utiliza en el PDF - si no hay data, mostrara una cadena de texto vacia
+                cantidad_bom = parseFloat(cantidad_bom) || '';
+
+                // Insertar informacion en array
+                detalleRevisionListaMaterialesArray.push({
+                    revision_lista_materiales: { id_interno: revision_lista_materiales_id_interno },
+                    articulo: { id_interno: articulo_id_interno, codigo: articulo_codigo, descripcion: articulo_descripcion },
+                    rendimiento_componentes,
+                    cantidad_bom,
+                    units,
+                    principio_activo
+                });
+                return true;
+            });
+
+            // error_log('getDetalleRevisionListaMateriales', detalleRevisionListaMaterialesArray );
+            return detalleRevisionListaMaterialesArray;
+        }
+
         /****************** Email ******************/
 
         function getUrlRecord(bomrevisionId) {
@@ -265,6 +353,8 @@ define(['N'],
             getCountrySubsidiary,
             // Revisión de lista de materiales - Records personalizados
             getConfiguracionEmpleados,
+            // Revisión de lista de materiales - Data
+            getDetalleRevisionListaMateriales,
             // Revisión de lista de materiales - Email
             sendEmail
         }
