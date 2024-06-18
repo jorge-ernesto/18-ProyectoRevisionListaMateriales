@@ -3,8 +3,6 @@
 //      - Biomont CS Mig Sui Rev Lis Mat (customscript_bio_cs_migsui_revlismat)
 // - Registro:
 //      - Revisión de lista de materiales (bomrevision)
-// - Contexto de Localizacion:
-//      - Peru
 
 // Validación como la usa LatamReady:
 // - ClientScript                   : No se ejecuta en modo ver. Solo se ejecuta en modo crear, copiar o editar.
@@ -25,8 +23,8 @@ define(['./lib/Bio.Library.Helper', 'N'],
         const scriptId = 'customscript_bio_sl_api_migsui_revlismat';
         const deployId = 'customdeploy_bio_sl_api_migsui_revlismat';
 
-        // const scriptDownloadId = 'customscript_bio_sl_mod_proy_des_arc';
-        // const deployDownloadId = 'customdeploy_bio_sl_mod_proy_des_arc';
+        const scriptDownloadId = 'customscript_bio_sl_migsui_rlm_des_arc';
+        const deployDownloadId = 'customdeploy_bio_sl_migsui_rlm_des_arc';
 
         /**
          * Formularios
@@ -50,7 +48,7 @@ define(['./lib/Bio.Library.Helper', 'N'],
 
             // Obtener el currentRecord y mode
             let recordContext = scriptContext.currentRecord;
-            let mode = recordContext.getValue('id') ? 'edit' : 'create';
+            let mode = scriptContext.mode;
 
             // Obtener datos
             let form_id = recordContext.getValue('customform') || null;
@@ -67,6 +65,39 @@ define(['./lib/Bio.Library.Helper', 'N'],
             }
         }
 
+        /**
+         * Validation function to be executed when record is saved.
+         *
+         * @param {Object} scriptContext
+         * @param {Record} scriptContext.currentRecord - Current form record
+         * @returns {boolean} Return true if record is valid
+         *
+         * @since 2015.2
+         */
+        function saveRecord(scriptContext) {
+
+            // Obtener el currentRecord y mode
+            let recordContext = scriptContext.currentRecord;
+            let mode = recordContext.getValue('id') ? 'edit' : 'create';
+
+            // Obtener datos
+            let form_id = recordContext.getValue('customform') || null;
+
+            // DEBUG
+            console.log('saveRecord!!!', scriptContext);
+
+            // Modo crear, editar, copiar y formularios
+            if ((mode == 'create' || mode == 'edit' || mode == 'copy') && forms.includes(Number(form_id))) {
+
+                // Validar campos firmas
+                if (!validarCamposFirmas(recordContext, mode)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         /****************** Funcionalidad en campos ******************/
 
         function deshabilitarCamposFirmas(recordContext, mode) {
@@ -76,12 +107,40 @@ define(['./lib/Bio.Library.Helper', 'N'],
 
             // Deshabilitar campos
             // Formulario "BIO_FRM_REVISION_LISTA_MATERIALES"
-            if (recordContext.getField('custrecord_bio_rlm_usu_fir_emitido_por'))  recordContext.getField('custrecord_bio_rlm_usu_fir_emitido_por').isDisabled = true;  // Se deshabilita
-            if (recordContext.getField('custrecord_bio_rlm_fec_fir_emitido_por'))  recordContext.getField('custrecord_bio_rlm_fec_fir_emitido_por').isDisabled = true;  // Se deshabilita
+            if (recordContext.getField('custrecord_bio_rlm_usu_fir_emitido_por')) recordContext.getField('custrecord_bio_rlm_usu_fir_emitido_por').isDisabled = true;  // Se deshabilita
+            if (recordContext.getField('custrecord_bio_rlm_fec_fir_emitido_por')) recordContext.getField('custrecord_bio_rlm_fec_fir_emitido_por').isDisabled = true;  // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_usu_fir_revisado_por')) recordContext.getField('custrecord_bio_rlm_usu_fir_revisado_por').isDisabled = true; // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_fec_fir_revisado_por')) recordContext.getField('custrecord_bio_rlm_fec_fir_revisado_por').isDisabled = true; // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_usu_fir_aprobado_por')) recordContext.getField('custrecord_bio_rlm_usu_fir_aprobado_por').isDisabled = true; // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_fec_fir_aprobado_por')) recordContext.getField('custrecord_bio_rlm_fec_fir_aprobado_por').isDisabled = true; // Se deshabilita
+        }
+
+        function validarCamposFirmas(recordContext, mode) {
+
+            // Modo editar
+            if (mode == 'edit') {
+
+                let firmaEmitidoPor = recordContext.getValue('custrecord_bio_rlm_usu_fir_emitido_por');
+
+                // Validar campo con data - que se haya firmado
+                if (firmaEmitidoPor) {
+
+                    // Cargar Sweet Alert
+                    loadSweetAlertLibrary().then(function () {
+
+                        // Ejecutar validacion
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "La revisión de lista de materiales se emitió. No se puede guardar el registro",
+                        });
+                    });
+
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /****************** Solicitud HTTP ******************/
@@ -106,14 +165,14 @@ define(['./lib/Bio.Library.Helper', 'N'],
             return suitelet;
         }
 
-        function sendRequestWrapper(method, comentarios = '') {
+        function sendRequestWrapper({ method, title = '¿Está seguro?' }) {
 
             // Cargar Sweet Alert
             loadSweetAlertLibrary().then(function () {
 
                 // Ejecutar confirmacion
                 Swal.fire({
-                    title: "¿Está seguro?",
+                    title: title,
                     text: "¡Debe confirmar la acción!",
                     icon: "warning",
                     showCancelButton: true,
@@ -124,14 +183,16 @@ define(['./lib/Bio.Library.Helper', 'N'],
                     if (result.isConfirmed) {
 
                         // Ejecutar peticion
-                        let responseData = sendRequest(method, comentarios);
-                        refreshPage(responseData);
+                        let responseData = sendRequest({ method, title });
+                        if (responseData.status == 'success' && responseData.urlRecord) {
+                            refreshPage(responseData);
+                        }
                     }
                 });
             });
         }
 
-        function sendRequest(method, comentarios = '') {
+        function sendRequest({ method, title = '¿Está seguro?' }) {
 
             // Obtener el id interno de la revision de lista de materiales
             let recordContext = currentRecord.get();
@@ -163,16 +224,101 @@ define(['./lib/Bio.Library.Helper', 'N'],
             window.location.href = responseData.urlRecord;
         }
 
-        /****************** Funciones para botones firmar ******************/
+        /****************** Mostrar botones ******************/
 
         function emitidoPor() {
 
-            sendRequestWrapper('emitidoPor');
+            sendRequestWrapper({ method: 'emitidoPor' });
+        }
+
+        function revisadoPor() {
+
+            loadSweetAlertLibrary().then(function () {
+
+                // Aprobar Revisado Por / No Aprobar Revisado Por
+                Swal.fire({
+                    title: "Revisado Por",
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Aprobar",
+                    denyButtonText: `Rechazar`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        // Ejecutar peticion
+                        sendRequestWrapper({ method: 'aprobarRevisadoPor' });
+
+                    } else if (result.isDenied) {
+
+                        // Ejecutar peticion
+                        sendRequestWrapper({ method: 'rechazarRevisadoPor', title: '¡Este proceso eliminara las firmas! ¿Está seguro?' });
+                    }
+                });
+            });
+        }
+
+        function aprobadoPor() {
+
+            loadSweetAlertLibrary().then(function () {
+
+                // Aprobar Revisado Por / No Aprobar Revisado Por
+                Swal.fire({
+                    title: "Aprobado Por",
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Aprobar",
+                    denyButtonText: `Rechazar`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        // Ejecutar peticion
+                        sendRequestWrapper({ method: 'aprobarAprobadoPor' });
+
+                    } else if (result.isDenied) {
+
+                        // Ejecutar peticion
+                        sendRequestWrapper({ method: 'rechazarAprobadoPor', title: '¡Este proceso eliminara las firmas! ¿Está seguro?' });
+                    }
+                });
+            });
+        }
+
+        function eliminarFirmas() {
+
+            sendRequestWrapper({ method: 'eliminarFirmas' });
+        }
+
+        function descargarPDF() {
+
+            // Obtener el id interno del record proyecto
+            let recordContext = currentRecord.get();
+            let bomrevision_id = recordContext.getValue('id');
+
+            // Obtener url del Suitelet mediante ID del Script y ID del Despliegue
+            let suitelet = url.resolveScript({
+                deploymentId: deployDownloadId,
+                scriptId: scriptDownloadId,
+                params: {
+                    _button: 'pdf',
+                    _bomrevision_id: bomrevision_id
+                }
+            });
+
+            // Evitar que aparezca el mensaje 'Estas seguro que deseas salir de la pantalla'
+            setWindowChanged(window, false);
+
+            // Abrir url
+            window.open(suitelet);
         }
 
         return {
             pageInit: pageInit,
-            emitidoPor: emitidoPor
+            saveRecord: saveRecord,
+            emitidoPor: emitidoPor,
+            revisadoPor: revisadoPor,
+            aprobadoPor: aprobadoPor,
+            eliminarFirmas: eliminarFirmas,
+            descargarPDF: descargarPDF
         };
 
     });

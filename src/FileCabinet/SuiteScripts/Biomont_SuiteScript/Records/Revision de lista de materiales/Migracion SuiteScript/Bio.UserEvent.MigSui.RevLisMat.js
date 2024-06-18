@@ -88,7 +88,13 @@ define(['./lib/Bio.Library.Helper', 'N'],
             form.clientScriptModulePath = './Bio.Client.MigSui.RevLisMat.js';
 
             // Obtener datos
+            let emitido_por_id = newRecord.getValue('custrecord_bio_rlm_usu_fir_emitido_por');
+            let revisado_por_id = newRecord.getValue('custrecord_bio_rlm_usu_fir_revisado_por');
+            let aprobado_por_id = newRecord.getValue('custrecord_bio_rlm_usu_fir_aprobado_por');
+
+            // Obtener datos
             let status = scriptContext.request.parameters['_status'];
+            let { user } = objHelper.getUser();
 
             /****************** Mostrar mensajes ******************/
             if (status?.includes('PROCESS_SIGNATURE')) {
@@ -99,23 +105,61 @@ define(['./lib/Bio.Library.Helper', 'N'],
                 });
             }
 
-            /****************** Mostrar botones para firmar ******************/
-            form.addButton({
-                id: 'custpage_button_emitido_por',
-                label: 'Firmar Emitido Por',
-                functionName: 'emitidoPor()'
-            });
+            /****************** Mostrar botones ******************/
+            // Obtener datos
+            let { empleados_perm_log_array, empleados_perm_invdes_array, empleados_perm_opepla_array, empleados_email_array } = objHelper.getConfiguracionEmpleados();
+
+            // Debug
+            // objHelper.error_log('data', { empleados_array, empleados_logistica_array });
+
+            // BOTON EMITIDO POR
+            if (empleados_perm_log_array.includes(Number(user.id))) {
+                if (!emitido_por_id) {
+                    form.addButton({
+                        id: 'custpage_button_emitido_por',
+                        label: 'Firmar Emitido Por',
+                        functionName: 'emitidoPor()'
+                    });
+                }
+            }
+
+            // BOTON REVISADO POR
+            if (empleados_perm_invdes_array.includes(Number(user.id))) {
+                if (emitido_por_id && !revisado_por_id) {
+                    form.addButton({
+                        id: 'custpage_button_revisado_por',
+                        label: 'Firmar Revisado Por',
+                        functionName: 'revisadoPor()'
+                    });
+                }
+            }
+
+            // BOTON APROBADO POR
+            if (empleados_perm_opepla_array.includes(Number(user.id))) {
+                if (emitido_por_id && revisado_por_id && !aprobado_por_id) {
+                    form.addButton({
+                        id: 'custpage_button_aprobado_por',
+                        label: 'Firmar Aprobado Por',
+                        functionName: 'aprobadoPor()'
+                    });
+                }
+            }
+
+            // BOTON ELIMINAR FIRMAS
+            if (empleados_perm_opepla_array.includes(Number(user.id))) {
+                if (aprobado_por_id) {
+                    form.addButton({
+                        id: 'custpage_button_eliminar_Firmas',
+                        label: 'Eliminar Firmas',
+                        functionName: 'eliminarFirmas()'
+                    });
+                }
+            }
 
             form.addButton({
-                id: 'custpage_button_revisado_por',
-                label: 'Firmar Revisado Por',
-                functionName: 'revisadoPor()'
-            });
-
-            form.addButton({
-                id: 'custpage_button_aprobado_por',
-                label: 'Firmar Aprobado Por',
-                functionName: 'aprobadoPor()'
+                id: 'custpage_button_descargar_pdf',
+                label: 'PDF',
+                functionName: 'descargarPDF()'
             });
         }
 

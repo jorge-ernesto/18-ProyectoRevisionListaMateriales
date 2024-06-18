@@ -61,49 +61,199 @@ define(['./lib/Bio.Library.Helper', 'N'],
                         method: method
                     };
 
-                    if (method == 'getDataUser') {
+                    // El control de errores comienza aca para tener acceso a method y response
+                    try {
+                        // Debug
+                        // objHelper.error_log('test err', response);
 
-                        // Obtener area
-                        let { area } = objHelper.getDataUser(solicitado_por_id);
+                        if (method == 'getDataUser') {
 
-                        // Respuesta
-                        response = {
-                            code: '200',
-                            status: 'success',
-                            method: method,
-                            area: area
-                        };
-                    } else if (method == 'emitidoPor' && bomrevisionRecord) {
-
-                        // Setear datos al record
-                        bomrevisionRecord.setValue('custrecord_bio_rlm_usu_fir_emitido_por', user.id);
-                        bomrevisionRecord.setValue('custrecord_bio_rlm_fec_fir_emitido_por', datetime);
-                        let bomrevisionId = bomrevisionRecord.save();
-                        log.debug('', bomrevisionId);
-
-                        if (bomrevisionId) {
-                            // Obtener url del Record
-                            let urlRecord = url.resolveRecord({
-                                recordType: 'bomrevision',
-                                recordId: bomrevision_id,
-                                params: {
-                                    _status: 'PROCESS_SIGNATURE'
-                                }
-                            })
-
-                            // Enviar email
-                            // objHelper.sendEmail_SolicitarAprobacion(proyectoRecord, user);
+                            // Obtener area
+                            let { area } = objHelper.getDataUser(solicitado_por_id);
 
                             // Respuesta
                             response = {
                                 code: '200',
                                 status: 'success',
                                 method: method,
-                                bomrevisionRecord: bomrevisionRecord,
-                                bomrevisionId: bomrevisionId,
-                                urlRecord: urlRecord
+                                area: area
                             };
+                        } else if (method == 'emitidoPor' && bomrevisionRecord) {
+
+                            // Setear datos al record
+                            bomrevisionRecord.setValue('custrecord_bio_rlm_usu_fir_emitido_por', user.id);
+                            bomrevisionRecord.setText('custrecord_bio_rlm_fec_fir_emitido_por', datetime);
+                            let bomrevisionId = bomrevisionRecord.save();
+                            log.debug('emitidoPor', bomrevisionId);
+
+                            if (bomrevisionId) {
+                                // Obtener url del Record
+                                let urlRecord = url.resolveRecord({
+                                    recordType: 'bomrevision',
+                                    recordId: bomrevision_id,
+                                    params: {
+                                        _status: 'PROCESS_SIGNATURE'
+                                    }
+                                })
+
+                                // Enviar email
+                                objHelper.sendEmail(bomrevisionRecord, user, method='emitidoPor');
+
+                                // Respuesta
+                                response = {
+                                    code: '200',
+                                    status: 'success',
+                                    method: method,
+                                    bomrevisionRecord: bomrevisionRecord,
+                                    bomrevisionId: bomrevisionId,
+                                    urlRecord: urlRecord
+                                };
+                            }
+                        } else if (method == 'aprobarRevisadoPor' && bomrevisionRecord) {
+
+                            // Setear datos al record
+                            bomrevisionRecord.setValue('custrecord_bio_rlm_usu_fir_revisado_por', user.id);
+                            bomrevisionRecord.setText('custrecord_bio_rlm_fec_fir_revisado_por', datetime);
+                            let bomrevisionId = bomrevisionRecord.save();
+                            log.debug('aprobarRevisadoPor', bomrevisionId);
+
+                            if (bomrevisionId) {
+                                // Obtener url del Record
+                                let urlRecord = url.resolveRecord({
+                                    recordType: 'bomrevision',
+                                    recordId: bomrevision_id,
+                                    params: {
+                                        _status: 'PROCESS_SIGNATURE'
+                                    }
+                                })
+
+                                // Enviar email
+                                objHelper.sendEmail(bomrevisionRecord, user, method='aprobarRevisadoPor');
+
+                                // Respuesta
+                                response = {
+                                    code: '200',
+                                    status: 'success',
+                                    method: method,
+                                    bomrevisionRecord: bomrevisionRecord,
+                                    bomrevisionId: bomrevisionId,
+                                    urlRecord: urlRecord
+                                };
+                            }
+                        } else if (method == 'rechazarRevisadoPor' && bomrevisionRecord) {
+
+                            // Setear datos al record
+                            // Firma (Emitido por)
+                            bomrevisionRecord.setValue('custrecord_bio_rlm_usu_fir_emitido_por', '');
+                            bomrevisionRecord.setText('custrecord_bio_rlm_fec_fir_emitido_por', '');
+                            // Firma (Revisado por)
+                            bomrevisionRecord.setValue('custrecord_bio_rlm_usu_fir_revisado_por', '');
+                            bomrevisionRecord.setText('custrecord_bio_rlm_fec_fir_revisado_por', '');
+                            let bomrevisionId = bomrevisionRecord.save();
+                            log.debug('rechazarRevisadoPor', bomrevisionId);
+
+                            if (bomrevisionId) {
+                                // Obtener url del Record
+                                let urlRecord = url.resolveRecord({
+                                    recordType: 'bomrevision',
+                                    recordId: bomrevision_id,
+                                    params: {
+                                        _status: 'PROCESS_SIGNATURE'
+                                    }
+                                })
+
+                                // Enviar email
+                                objHelper.sendEmail(bomrevisionRecord, user, method='rechazarRevisadoPor');
+
+                                // Respuesta
+                                response = {
+                                    code: '200',
+                                    status: 'success',
+                                    method: method,
+                                    bomrevisionRecord: bomrevisionRecord,
+                                    bomrevisionId: bomrevisionId,
+                                    urlRecord: urlRecord
+                                };
+                            }
+                        } else if (method == 'aprobarAprobadoPor' && bomrevisionRecord) {
+
+                            // Setear datos al record
+                            bomrevisionRecord.setValue('custrecord_bio_rlm_usu_fir_aprobado_por', user.id);
+                            bomrevisionRecord.setText('custrecord_bio_rlm_fec_fir_aprobado_por', datetime);
+                            let bomrevisionId = bomrevisionRecord.save();
+                            log.debug('aprobarAprobadoPor', bomrevisionId);
+
+                            if (bomrevisionId) {
+                                // Obtener url del Record
+                                let urlRecord = url.resolveRecord({
+                                    recordType: 'bomrevision',
+                                    recordId: bomrevision_id,
+                                    params: {
+                                        _status: 'PROCESS_SIGNATURE'
+                                    }
+                                })
+
+                                // Enviar email
+                                objHelper.sendEmail(bomrevisionRecord, user, method='aprobarAprobadoPor');
+
+                                // Respuesta
+                                response = {
+                                    code: '200',
+                                    status: 'success',
+                                    method: method,
+                                    bomrevisionRecord: bomrevisionRecord,
+                                    bomrevisionId: bomrevisionId,
+                                    urlRecord: urlRecord
+                                };
+                            }
+                        } else if ((method == 'rechazarAprobadoPor' || method == 'eliminarFirmas') && bomrevisionRecord) {
+
+                            // Setear datos al record
+                            // Firma (Emitido por)
+                            bomrevisionRecord.setValue('custrecord_bio_rlm_usu_fir_emitido_por', '');
+                            bomrevisionRecord.setText('custrecord_bio_rlm_fec_fir_emitido_por', '');
+                            // Firma (Revisado por)
+                            bomrevisionRecord.setValue('custrecord_bio_rlm_usu_fir_revisado_por', '');
+                            bomrevisionRecord.setText('custrecord_bio_rlm_fec_fir_revisado_por', '');
+                            // Firma (Aprobado por)
+                            bomrevisionRecord.setValue('custrecord_bio_rlm_usu_fir_aprobado_por', '');
+                            bomrevisionRecord.setText('custrecord_bio_rlm_fec_fir_aprobado_por', '');
+                            let bomrevisionId = bomrevisionRecord.save();
+                            log.debug('rechazarAprobadoPor, eliminarFirmas', bomrevisionId);
+
+                            if (bomrevisionId) {
+                                // Obtener url del Record
+                                let urlRecord = url.resolveRecord({
+                                    recordType: 'bomrevision',
+                                    recordId: bomrevision_id,
+                                    params: {
+                                        _status: 'PROCESS_SIGNATURE'
+                                    }
+                                })
+
+                                // Enviar email
+                                if (method == 'rechazarAprobadoPor')
+                                    objHelper.sendEmail(bomrevisionRecord, user, method='rechazarAprobadoPor');
+
+                                // Respuesta
+                                response = {
+                                    code: '200',
+                                    status: 'success',
+                                    method: method,
+                                    bomrevisionRecord: bomrevisionRecord,
+                                    bomrevisionId: bomrevisionId,
+                                    urlRecord: urlRecord
+                                };
+                            }
                         }
+                    } catch (err) {
+                        // Respuesta
+                        response = {
+                            code: '400',
+                            status: 'error',
+                            method: method,
+                            err: err
+                        };
                     }
 
                     // Respuesta
