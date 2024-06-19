@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_bio_sl_api_migsui_revlismat">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>Biomont SL API Mig Sui Rev Lis Mat</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/Biomont_SuiteScript/Records/Revision de lista de materiales/Migracion SuiteScript/Bio.SuiteletAPI.MigSui.RevLisMat.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_bio_sl_api_migsui_revlismat">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>T</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole>ADMINISTRATOR</runasrole>
+      <status>RELEASED</status>
+      <title>Biomont SL API Mig Sui Rev Lis Mat</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

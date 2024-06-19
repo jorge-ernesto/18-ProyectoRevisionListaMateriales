@@ -1,4 +1,22 @@
 <manifest projecttype="ACCOUNTCUSTOMIZATION">
   <projectname>18-ProyectoRevisionListaMateriales</projectname>
   <frameworkversion>1.0</frameworkversion>
+  <dependencies>
+    <features>
+      <feature required="true">CLASSES</feature>
+      <feature required="false">MULTILANGUAGE</feature>
+      <feature required="true">SERVERSIDESCRIPTING</feature>
+      <feature required="false">CRM</feature>
+      <feature required="false">CUSTOMSEGMENTS</feature>
+      <feature required="false">EXTREMELIST</feature>
+      <feature required="false">MAILMERGE</feature>
+      <feature required="true">CUSTOMRECORDS</feature>
+      <feature required="true">SUBSIDIARIES</feature>
+    </features>
+    <objects>
+      <object>custrecordbio_cam_revision_observacione</object>
+      <object>custrecord211</object>
+      <object>custrecord184</object>
+    </objects>
+  </dependencies>
 </manifest>
