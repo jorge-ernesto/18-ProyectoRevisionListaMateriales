@@ -121,9 +121,10 @@ define(['./lib/Bio.Library.Helper', 'N'],
             if (mode == 'edit') {
 
                 let firmaEmitidoPor = recordContext.getValue('custrecord_bio_rlm_usu_fir_emitido_por');
+                let firmaEmitidoPorString = recordContext.getValue('custrecord211');
 
                 // Validar campo con data - que se haya firmado
-                if (firmaEmitidoPor) {
+                if (firmaEmitidoPor || firmaEmitidoPorString) {
 
                     // Cargar Sweet Alert
                     loadSweetAlertLibrary().then(function () {
@@ -285,7 +286,7 @@ define(['./lib/Bio.Library.Helper', 'N'],
 
         function eliminarFirmas() {
 
-            sendRequestWrapper({ method: 'eliminarFirmas' });
+            sendRequestWrapper({ method: 'eliminarFirmas', title: '¡Este proceso eliminara las firmas! ¿Está seguro?' });
         }
 
         function descargarPDF() {

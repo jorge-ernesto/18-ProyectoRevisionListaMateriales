@@ -107,13 +107,13 @@ define(['./lib/Bio.Library.Helper', 'N'],
 
             /****************** Mostrar botones ******************/
             // Obtener datos
-            let { empleados_perm_log_array, empleados_perm_invdes_array, empleados_perm_opepla_array, empleados_email_array } = objHelper.getConfiguracionEmpleados();
+            let { empleados_perm_fir_log_array, empleados_perm_fir_invdes_array, empleados_perm_fir_opepla_array, empleados_perm_elifir_array, empleados_email_array } = objHelper.getConfiguracionEmpleados();
 
             // Debug
             // objHelper.error_log('data', { empleados_array, empleados_logistica_array });
 
             // BOTON EMITIDO POR
-            if (empleados_perm_log_array.includes(Number(user.id))) {
+            if (empleados_perm_fir_log_array.includes(Number(user.id))) {
                 if (!emitido_por_id) {
                     form.addButton({
                         id: 'custpage_button_emitido_por',
@@ -124,7 +124,7 @@ define(['./lib/Bio.Library.Helper', 'N'],
             }
 
             // BOTON REVISADO POR
-            if (empleados_perm_invdes_array.includes(Number(user.id))) {
+            if (empleados_perm_fir_invdes_array.includes(Number(user.id))) {
                 if (emitido_por_id && !revisado_por_id) {
                     form.addButton({
                         id: 'custpage_button_revisado_por',
@@ -135,7 +135,7 @@ define(['./lib/Bio.Library.Helper', 'N'],
             }
 
             // BOTON APROBADO POR
-            if (empleados_perm_opepla_array.includes(Number(user.id))) {
+            if (empleados_perm_fir_opepla_array.includes(Number(user.id))) {
                 if (emitido_por_id && revisado_por_id && !aprobado_por_id) {
                     form.addButton({
                         id: 'custpage_button_aprobado_por',
@@ -146,14 +146,12 @@ define(['./lib/Bio.Library.Helper', 'N'],
             }
 
             // BOTON ELIMINAR FIRMAS
-            if (empleados_perm_opepla_array.includes(Number(user.id))) {
-                if (aprobado_por_id) {
-                    form.addButton({
-                        id: 'custpage_button_eliminar_Firmas',
-                        label: 'Eliminar Firmas',
-                        functionName: 'eliminarFirmas()'
-                    });
-                }
+            if (empleados_perm_elifir_array.includes(Number(user.id))) {
+                form.addButton({
+                    id: 'custpage_button_eliminar_Firmas',
+                    label: 'Eliminar firmas',
+                    functionName: 'eliminarFirmas()'
+                });
             }
 
             form.addButton({

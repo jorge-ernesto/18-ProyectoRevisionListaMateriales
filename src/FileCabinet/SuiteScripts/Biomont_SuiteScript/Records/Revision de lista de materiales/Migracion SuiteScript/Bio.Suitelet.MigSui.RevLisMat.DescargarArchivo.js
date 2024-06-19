@@ -104,12 +104,12 @@ define(['./lib/Bio.Library.Helper', 'N'],
                 // Detalle
                 dataDetalleRevisionListaMateriales: dataDetalleRevisionListaMateriales,
                 // Firmas
-                usuario_firma_emitido_por: bomrevisionRecord.getText('custrecord_bio_rlm_usu_fir_emitido_por'),
-                fecha_firma_emitido_por: bomrevisionRecord.getText('custrecord_bio_rlm_fec_fir_emitido_por'),
-                usuario_firma_revisado_por: bomrevisionRecord.getText('custrecord_bio_rlm_usu_fir_revisado_por'),
-                fecha_firma_revisado_por: bomrevisionRecord.getText('custrecord_bio_rlm_fec_fir_revisado_por'),
-                usuario_firma_aprobado_por: bomrevisionRecord.getText('custrecord_bio_rlm_usu_fir_aprobado_por'),
-                fecha_firma_aprobado_por: bomrevisionRecord.getText('custrecord_bio_rlm_fec_fir_aprobado_por'),
+                usuario_firma_emitido_por: bomrevisionRecord.getText('custrecord_bio_rlm_usu_fir_emitido_por') || bomrevisionRecord.getText('custrecord211'),
+                fecha_firma_emitido_por: bomrevisionRecord.getText('custrecord_bio_rlm_fec_fir_emitido_por') || bomrevisionRecord.getText('custrecord212'),
+                usuario_firma_revisado_por: bomrevisionRecord.getText('custrecord_bio_rlm_usu_fir_revisado_por') || bomrevisionRecord.getText('custrecord213'),
+                fecha_firma_revisado_por: bomrevisionRecord.getText('custrecord_bio_rlm_fec_fir_revisado_por') || bomrevisionRecord.getText('custrecord214'),
+                usuario_firma_aprobado_por: bomrevisionRecord.getText('custrecord_bio_rlm_usu_fir_aprobado_por') || bomrevisionRecord.getText('custrecord215'),
+                fecha_firma_aprobado_por: bomrevisionRecord.getText('custrecord_bio_rlm_fec_fir_aprobado_por') || bomrevisionRecord.getText('custrecord216'),
             }
 
             return data;

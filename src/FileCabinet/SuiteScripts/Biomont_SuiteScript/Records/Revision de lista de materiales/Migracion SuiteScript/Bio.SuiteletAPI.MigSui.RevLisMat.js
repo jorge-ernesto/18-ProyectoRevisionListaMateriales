@@ -218,6 +218,20 @@ define(['./lib/Bio.Library.Helper', 'N'],
                             // Firma (Aprobado por)
                             bomrevisionRecord.setValue('custrecord_bio_rlm_usu_fir_aprobado_por', '');
                             bomrevisionRecord.setText('custrecord_bio_rlm_fec_fir_aprobado_por', '');
+
+                            if (method == 'eliminarFirmas') {
+                                // Setear datos al record
+                                // Firma (Emitido por) - String
+                                bomrevisionRecord.setValue('custrecord211', '');
+                                bomrevisionRecord.setText('custrecord212', '');
+                                // Firma (Revisado por) - String
+                                bomrevisionRecord.setValue('custrecord213', '');
+                                bomrevisionRecord.setText('custrecord214', '');
+                                // Firma (Aprobado por) - String
+                                bomrevisionRecord.setValue('custrecord215', '');
+                                bomrevisionRecord.setText('custrecord216', '');
+                            }
+
                             let bomrevisionId = bomrevisionRecord.save();
                             log.debug('rechazarAprobadoPor, eliminarFirmas', bomrevisionId);
 
@@ -232,8 +246,9 @@ define(['./lib/Bio.Library.Helper', 'N'],
                                 })
 
                                 // Enviar email
-                                if (method == 'rechazarAprobadoPor')
+                                if (method == 'rechazarAprobadoPor') {
                                     objHelper.sendEmail(bomrevisionRecord, user, method='rechazarAprobadoPor');
+                                }
 
                                 // Respuesta
                                 response = {
