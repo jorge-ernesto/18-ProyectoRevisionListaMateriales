@@ -111,7 +111,7 @@
 				</tr>
                 <tr>
                     <th colspan="5" align="right" valign="middle">
-						<span class="fs18"><b>REVISIÓN DE LISTA DE MATERIALES</b></span>
+						<span class="fs18"><b>${params.bomrevision_data.titulo_pdf}</b></span>
 					</th>
                 </tr>
                 <tr>

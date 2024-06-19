@@ -12,6 +12,24 @@ define(['./lib/Bio.Library.Helper', 'N'],
 
         const { log, file, render, encode, record } = N;
 
+        const CONFIG_RECORD = {
+            titulo_pdf: {
+                'BK': 'REVISIÓN DE LISTA DE MATERIALES FABRICACION',
+                'PIP': 'REVISIÓN DE LISTA DE MATERIALES FABRICACION',
+                'MIP': 'REVISIÓN DE LISTA DE MATERIALES FABRICACION',
+                'INY': 'REVISIÓN DE LISTA DE MATERIALES ENVASE Y EMPAQUE',
+                'SOL': 'REVISIÓN DE LISTA DE MATERIALES ENVASE Y EMPAQUE',
+                'SEM': 'REVISIÓN DE LISTA DE MATERIALES ENVASE Y EMPAQUE',
+                'SOT': 'REVISIÓN DE LISTA DE MATERIALES ENVASE Y EMPAQUE',
+                'LIQ': 'REVISIÓN DE LISTA DE MATERIALES ENVASE Y EMPAQUE',
+                'POL': 'REVISIÓN DE LISTA DE MATERIALES ENVASE Y EMPAQUE',
+                'IMP': 'REVISIÓN DE LISTA DE MATERIALES IMPORTADOS',
+                'MM': 'REVISIÓN DE LISTA DE MATERIALES MUESTRA MÉDICAS',
+                'PIT': 'REVISIÓN DE LISTA DE MATERIALES ENVASADO',
+                'default': 'REVISIÓN DE LISTA DE MATERIALES'
+            }
+        }
+
         /******************/
 
         // Crear PDF
@@ -63,6 +81,11 @@ define(['./lib/Bio.Library.Helper', 'N'],
             });
 
             // Obtener data
+            let memo = bomrevisionRecord.getValue('memo');
+            let codigo_prefijo = memo.substring(0, memo.indexOf('0'));
+            let titulo_pdf = CONFIG_RECORD['titulo_pdf'][codigo_prefijo] || CONFIG_RECORD['titulo_pdf']['default'];
+
+            // Obtener data
             let dataDetalleRevisionListaMateriales = objHelper.getDetalleRevisionListaMateriales(bomrevision_id);
 
             // Debug
@@ -72,6 +95,7 @@ define(['./lib/Bio.Library.Helper', 'N'],
             let data = {
                 // Data
                 // Cabecera
+                titulo_pdf: titulo_pdf,
                 id_interno: bomrevisionRecord.getValue('id'),
                 revision: bomrevisionRecord.getValue('name'),
                 memo: bomrevisionRecord.getValue('memo'),
