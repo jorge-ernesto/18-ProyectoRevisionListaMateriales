@@ -69,14 +69,14 @@ define(['./lib/Bio.Library.Helper', 'N'],
                         if (method == 'getDataUser') {
 
                             // Obtener area
-                            let { area } = objHelper.getDataUser(solicitado_por_id);
+                            let { centro_costo } = objHelper.getDataUser(user.id);
 
                             // Respuesta
                             response = {
                                 code: '200',
                                 status: 'success',
                                 method: method,
-                                area: area
+                                centro_costo: centro_costo
                             };
                         } else if (method == 'emitidoPor' && bomrevisionRecord) {
 

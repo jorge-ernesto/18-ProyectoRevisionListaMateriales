@@ -36,6 +36,19 @@ define(['N'],
             return countrySubsidiary;
         }
 
+        function getDataUser(userId) {
+            // Cargar el registro del empleado
+            var employeeRecord = record.load({
+                type: record.Type.EMPLOYEE,
+                id: userId
+            });
+
+            // Obtener datos del empleado
+            var centro_costo = employeeRecord.getValue('class');
+
+            return { centro_costo };
+        }
+
         /****************** Records personalizados ******************/
 
         function getConfiguracionEmpleados() {
@@ -368,6 +381,7 @@ define(['N'],
             error_message,
             // Revisión de lista de materiales - Validacion
             getCountrySubsidiary,
+            getDataUser,
             // Revisión de lista de materiales - Records personalizados
             getConfiguracionEmpleados,
             // Revisión de lista de materiales - Data

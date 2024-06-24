@@ -120,11 +120,15 @@ define(['./lib/Bio.Library.Helper', 'N'],
             // Modo editar
             if (mode == 'edit') {
 
+                // Obtener datos
                 let firmaEmitidoPor = recordContext.getValue('custrecord_bio_rlm_usu_fir_emitido_por');
                 let firmaEmitidoPorString = recordContext.getValue('custrecord211');
 
+                // Obtener datos
+                let responseData = sendRequest({ method: 'getDataUser' });
+
                 // Validar campo con data - que se haya firmado
-                if (firmaEmitidoPor || firmaEmitidoPorString) {
+                if ((firmaEmitidoPor || firmaEmitidoPorString) && responseData.centro_costo != '16') {
 
                     // Cargar Sweet Alert
                     loadSweetAlertLibrary().then(function () {
