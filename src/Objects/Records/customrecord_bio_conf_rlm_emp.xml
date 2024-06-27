@@ -236,11 +236,55 @@
       <storevalue>T</storevalue>
       <subtab></subtab>
     </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_bio_rlm_emp_env_email">
+      <accesslevel>2</accesslevel>
+      <allowquickadd>F</allowquickadd>
+      <applyformatting>F</applyformatting>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <defaultselection></defaultselection>
+      <defaultvalue></defaultvalue>
+      <description></description>
+      <displayheight></displayheight>
+      <displaytype>NORMAL</displaytype>
+      <displaywidth></displaywidth>
+      <dynamicdefault></dynamicdefault>
+      <encryptatrest>F</encryptatrest>
+      <fieldtype>CHECKBOX</fieldtype>
+      <globalsearch>F</globalsearch>
+      <help></help>
+      <isformula>F</isformula>
+      <ismandatory>F</ismandatory>
+      <isparent>F</isparent>
+      <label>Enviar email</label>
+      <linktext></linktext>
+      <maxlength></maxlength>
+      <maxvalue></maxvalue>
+      <minvalue></minvalue>
+      <onparentdelete></onparentdelete>
+      <parentsubtab></parentsubtab>
+      <rolerestrict>F</rolerestrict>
+      <searchcomparefield></searchcomparefield>
+      <searchdefault></searchdefault>
+      <searchlevel>2</searchlevel>
+      <selectrecordtype></selectrecordtype>
+      <showinlist>T</showinlist>
+      <sourcefilterby></sourcefilterby>
+      <sourcefrom></sourcefrom>
+      <sourcelist></sourcelist>
+      <storevalue>T</storevalue>
+      <subtab></subtab>
+    </customrecordcustomfield>
   </customrecordcustomfields>
   <permissions>
     <permission>
       <permittedlevel>FULL</permittedlevel>
       <permittedrole>ADMINISTRATOR</permittedrole>
+      <restriction></restriction>
+    </permission>
+    <permission>
+      <permittedlevel>FULL</permittedlevel>
+      <permittedrole>[scriptid=customrole1067]</permittedrole>
       <restriction></restriction>
     </permission>
   </permissions>

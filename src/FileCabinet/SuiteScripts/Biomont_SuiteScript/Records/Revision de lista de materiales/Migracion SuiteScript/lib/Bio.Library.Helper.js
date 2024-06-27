@@ -64,7 +64,8 @@ define(['N'],
                     'custrecord_bio_rlm_emp_centro_costo',
                     'custrecord_bio_rlm_emp_empleado',
                     'custrecord_bio_rlm_emp_perm_firmar',
-                    'custrecord_bio_rlm_emp_perm_eliminar_fir'
+                    'custrecord_bio_rlm_emp_perm_eliminar_fir',
+                    'custrecord_bio_rlm_emp_env_email'
                 ],
                 filters: [
                     search.createFilter({
@@ -87,6 +88,7 @@ define(['N'],
                 let empleado_nombre = result.getText(columns[2]);
                 let permiso_firmar = result.getValue(columns[3]);
                 let permiso_eliminar_firmas = result.getValue(columns[4]);
+                let enviar_email = result.getValue(columns[5]);
 
                 // Insertar informacion en array
                 empleadosArray.push({
@@ -94,7 +96,8 @@ define(['N'],
                     centro_costo: { id_interno: centro_costo_id_interno, nombre: centro_costo_nombre },
                     empleado: { id_interno: empleado_id_interno, nombre: empleado_nombre },
                     permiso_firmar: permiso_firmar,
-                    permiso_eliminar_firmas: permiso_eliminar_firmas
+                    permiso_eliminar_firmas: permiso_eliminar_firmas,
+                    enviar_email: enviar_email
                 });
                 return true;
             });
@@ -102,6 +105,7 @@ define(['N'],
             // Obtener empleados
             /**
              * Empleados permiso firmar del cc Logística
+             *
              * Subsidiaria: BIOMONT
              * Centro de Costo: 1501 Logística
              * Permiso firmar: Si
@@ -112,6 +116,7 @@ define(['N'],
 
             /**
              * Empleados permiso firmar del cc Investigación y Desarrollo
+             *
              * Subsidiaria: BIOMONT
              * Centro de Costo: 5501 Investigación y Desarrollo
              * Permiso firmar: Si
@@ -122,6 +127,7 @@ define(['N'],
 
             /**
              * Empleados permiso firmar del cc Operaciones y Planta
+             *
              * Subsidiaria: BIOMONT
              * Centro de Costo: 1001 Operaciones y Planta
              * Permiso firmar: Si
@@ -131,23 +137,24 @@ define(['N'],
             empleados_perm_fir_opepla_array = [...new Set(empleados_perm_fir_opepla_array)];
 
             /**
-             * Empleados permiso eliminar firmas
+             * Empleados permiso eliminar firmas del cc Operaciones y Planta
+             *
              * Subsidiaria: BIOMONT
-             * Centro de Costo: Todos
+             * Centro de Costo: 1001 Operaciones y Planta
              * Permiso eliminar firmas: Si
              */
-            let empleados_perm_elifir_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.permiso_eliminar_firmas == true);
+            let empleados_perm_elifir_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.centro_costo.id_interno == '1' && registro.permiso_eliminar_firmas == true);
             empleados_perm_elifir_array = empleados_perm_elifir_array.map(registro => Number(registro.empleado.id_interno));
             empleados_perm_elifir_array = [...new Set(empleados_perm_elifir_array)];
 
             /**
-             * Todos los empleados
+             * Empleados enviar email
+             *
              * Subsidiaria: BIOMONT
              * Centro de Costo: Todos
-             * Permisor firmar: Todos
+             * Enviar email: Si
              */
-            // Obtener empleados -- Subsidiaria: BIOMONT, Todos los centros de costo
-            let empleados_email_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2');
+            let empleados_email_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.enviar_email == true);
             empleados_email_array = empleados_email_array.map(registro => Number(registro.empleado.id_interno));
             empleados_email_array = [...new Set(empleados_email_array)];
 
@@ -227,6 +234,7 @@ define(['N'],
 
                 // Procesar informacion
                 // Informacion que se utiliza en el PDF - si no hay data, mostrara una cadena de texto vacia
+                rendimiento_componentes = parseFloat(rendimiento_componentes) || '';
                 cantidad_bom = parseFloat(cantidad_bom) || '';
 
                 // Insertar informacion en array
