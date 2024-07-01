@@ -1,4 +1,4 @@
-<customrecordtype scriptid="customrecord_bio_conf_rlm_emp">
+<customrecordtype scriptid="customrecord_bio_conf_rlm_perm">
   <accesstype>USEPERMISSIONLIST</accesstype>
   <allowattachments>F</allowattachments>
   <allowinlinedeleting>F</allowinlinedeleting>
@@ -10,7 +10,7 @@
   <allowquicksearch>F</allowquicksearch>
   <allowuiaccess>T</allowuiaccess>
   <customsegment></customsegment>
-  <description>Configuración para relacionar Revisión de lista de materiales y Empleado</description>
+  <description>Configuración para relacionar Revisión de lista de materiales y Permiso</description>
   <enabledle>T</enabledle>
   <enablekeywords>T</enablekeywords>
   <enablemailmerge>F</enablemailmerge>
@@ -30,7 +30,7 @@
   <numberingmindigits></numberingmindigits>
   <numberingprefix></numberingprefix>
   <numberingsuffix></numberingsuffix>
-  <recordname>Configuración de Rev Lis Mat - Empleado</recordname>
+  <recordname>Configuración de Rev Lis Mat - Permiso</recordname>
   <showcreationdate>F</showcreationdate>
   <showcreationdateonlist>F</showcreationdateonlist>
   <showid>F</showid>
@@ -41,7 +41,7 @@
   <showownerallowchange>F</showownerallowchange>
   <showowneronlist>F</showowneronlist>
   <customrecordcustomfields>
-    <customrecordcustomfield scriptid="custrecord_bio_rlm_emp_subsidiaria">
+    <customrecordcustomfield scriptid="custrecord_bio_rlm_perm_subsidiaria">
       <accesslevel>2</accesslevel>
       <allowquickadd>F</allowquickadd>
       <applyformatting>F</applyformatting>
@@ -80,46 +80,7 @@
       <storevalue>T</storevalue>
       <subtab></subtab>
     </customrecordcustomfield>
-    <customrecordcustomfield scriptid="custrecord_bio_rlm_emp_centro_costo">
-      <accesslevel>2</accesslevel>
-      <allowquickadd>F</allowquickadd>
-      <applyformatting>F</applyformatting>
-      <checkspelling>F</checkspelling>
-      <defaultchecked>F</defaultchecked>
-      <defaultselection></defaultselection>
-      <defaultvalue></defaultvalue>
-      <description></description>
-      <displayheight></displayheight>
-      <displaytype>NORMAL</displaytype>
-      <displaywidth></displaywidth>
-      <dynamicdefault></dynamicdefault>
-      <encryptatrest>F</encryptatrest>
-      <fieldtype>SELECT</fieldtype>
-      <globalsearch>F</globalsearch>
-      <help></help>
-      <isformula>F</isformula>
-      <ismandatory>F</ismandatory>
-      <isparent>F</isparent>
-      <label>Centro de Costo</label>
-      <linktext></linktext>
-      <maxlength></maxlength>
-      <maxvalue></maxvalue>
-      <minvalue></minvalue>
-      <onparentdelete>NO_ACTION</onparentdelete>
-      <parentsubtab></parentsubtab>
-      <rolerestrict>F</rolerestrict>
-      <searchcomparefield></searchcomparefield>
-      <searchdefault></searchdefault>
-      <searchlevel>2</searchlevel>
-      <selectrecordtype>-101</selectrecordtype>
-      <showinlist>T</showinlist>
-      <sourcefilterby></sourcefilterby>
-      <sourcefrom></sourcefrom>
-      <sourcelist></sourcelist>
-      <storevalue>T</storevalue>
-      <subtab></subtab>
-    </customrecordcustomfield>
-    <customrecordcustomfield scriptid="custrecord_bio_rlm_emp_empleado">
+    <customrecordcustomfield scriptid="custrecord_bio_rlm_perm_empleado">
       <accesslevel>2</accesslevel>
       <allowquickadd>F</allowquickadd>
       <applyformatting>F</applyformatting>
@@ -158,7 +119,7 @@
       <storevalue>T</storevalue>
       <subtab></subtab>
     </customrecordcustomfield>
-    <customrecordcustomfield scriptid="custrecord_bio_rlm_emp_perm_firmar">
+    <customrecordcustomfield scriptid="custrecord_bio_rlm_perm_permguardar">
       <accesslevel>2</accesslevel>
       <allowquickadd>F</allowquickadd>
       <applyformatting>F</applyformatting>
@@ -178,7 +139,7 @@
       <isformula>F</isformula>
       <ismandatory>F</ismandatory>
       <isparent>F</isparent>
-      <label>Permiso firmar</label>
+      <label>Permiso guardar</label>
       <linktext></linktext>
       <maxlength></maxlength>
       <maxvalue></maxvalue>
@@ -197,7 +158,7 @@
       <storevalue>T</storevalue>
       <subtab></subtab>
     </customrecordcustomfield>
-    <customrecordcustomfield scriptid="custrecord_bio_rlm_emp_env_email">
+    <customrecordcustomfield scriptid="custrecord_bio_rlm_perm_permeliminarfir">
       <accesslevel>2</accesslevel>
       <allowquickadd>F</allowquickadd>
       <applyformatting>F</applyformatting>
@@ -217,7 +178,7 @@
       <isformula>F</isformula>
       <ismandatory>F</ismandatory>
       <isparent>F</isparent>
-      <label>Enviar email</label>
+      <label>Permiso eliminar firmas</label>
       <linktext></linktext>
       <maxlength></maxlength>
       <maxvalue></maxvalue>
@@ -239,13 +200,8 @@
   </customrecordcustomfields>
   <permissions>
     <permission>
-      <permittedlevel>FULL</permittedlevel>
+      <permittedlevel>VIEW</permittedlevel>
       <permittedrole>ADMINISTRATOR</permittedrole>
-      <restriction></restriction>
-    </permission>
-    <permission>
-      <permittedlevel>FULL</permittedlevel>
-      <permittedrole>[scriptid=customrole1067]</permittedrole>
       <restriction></restriction>
     </permission>
   </permissions>

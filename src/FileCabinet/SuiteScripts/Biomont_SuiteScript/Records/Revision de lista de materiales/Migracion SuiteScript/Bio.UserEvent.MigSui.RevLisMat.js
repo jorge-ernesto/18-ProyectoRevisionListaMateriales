@@ -106,8 +106,11 @@ define(['./lib/Bio.Library.Helper', 'N'],
             }
 
             /****************** Mostrar botones ******************/
-            // Obtener datos
-            let { empleados_perm_fir_log_array, empleados_perm_fir_invdes_array, empleados_perm_fir_opepla_array, empleados_perm_elifir_array, empleados_email_array } = objHelper.getConfiguracionEmpleados();
+            // Obtener datos - permisos basicos
+            let { empleados_perm_fir_log_array, empleados_perm_fir_invdes_array, empleados_perm_fir_opepla_array, empleados_email_array } = objHelper.getConfiguracionEmpleadosPermisosBasicos();
+
+            // Obtener datos - permisos superiores
+            let { empleados_perm_gua_array, empleados_perm_eli_fir_array } = objHelper.getConfiguracionEmpleadosPermisosSuperiores();
 
             // Debug
             // objHelper.error_log('data', { empleados_array, empleados_logistica_array });
@@ -146,7 +149,7 @@ define(['./lib/Bio.Library.Helper', 'N'],
             }
 
             // BOTON ELIMINAR FIRMAS
-            if (empleados_perm_elifir_array.includes(Number(user.id))) {
+            if (empleados_perm_eli_fir_array.includes(Number(user.id))) {
                 form.addButton({
                     id: 'custpage_button_eliminar_Firmas',
                     label: 'Eliminar firmas',

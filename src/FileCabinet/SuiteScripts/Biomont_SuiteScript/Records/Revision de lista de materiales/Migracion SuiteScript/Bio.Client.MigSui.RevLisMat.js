@@ -125,10 +125,15 @@ define(['./lib/Bio.Library.Helper', 'N'],
                 let firmaEmitidoPorString = recordContext.getValue('custrecord211');
 
                 // Obtener datos
-                let responseData = sendRequest({ method: 'getDataUser' });
+                let responseData = sendRequest({ method: 'getDataConfiguracionEmpleadosPermisosSuperiores' });
+                let arrayEmpleadosPermisosGuardar = responseData.arrayEmpleadosPermisosSuperiores.empleados_perm_gua_array;
+
+                // Obtener user
+                let { user } = objHelper.getUser();
 
                 // Validar campo con data - que se haya firmado
-                if ((firmaEmitidoPor || firmaEmitidoPorString) && responseData.centro_costo != '16') {
+                // Validar que usuario no este registros en empleados permisos
+                if ((firmaEmitidoPor || firmaEmitidoPorString) && !arrayEmpleadosPermisosGuardar.includes(Number(user.id))) {
 
                     // Cargar Sweet Alert
                     loadSweetAlertLibrary().then(function () {
