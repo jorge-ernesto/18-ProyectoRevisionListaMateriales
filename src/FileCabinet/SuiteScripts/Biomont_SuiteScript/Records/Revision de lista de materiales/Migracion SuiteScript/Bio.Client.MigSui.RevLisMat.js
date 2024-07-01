@@ -89,6 +89,11 @@ define(['./lib/Bio.Library.Helper', 'N'],
             // Modo crear, editar, copiar y formularios
             if ((mode == 'create' || mode == 'edit' || mode == 'copy') && forms.includes(Number(form_id))) {
 
+                // Validar formularios inactivos
+                if (!validarFormulariosInactivos(recordContext, mode)) {
+                    return false;
+                }
+
                 // Validar campos firmas
                 if (!validarCamposFirmas(recordContext, mode)) {
                     return false;
@@ -115,6 +120,48 @@ define(['./lib/Bio.Library.Helper', 'N'],
             if (recordContext.getField('custrecord_bio_rlm_fec_fir_aprobado_por')) recordContext.getField('custrecord_bio_rlm_fec_fir_aprobado_por').isDisabled = true; // Se deshabilita
         }
 
+        function validarFormulariosInactivos(recordContext, mode) {
+
+            // Modo editar
+            if (mode == 'edit') {
+
+                // Obtener datos
+                let formulario = recordContext.getValue('customform');
+
+                // Obtener datos
+                let responseData = sendRequest({ method: 'getDataConfiguracionEmpleadosPermisosSuperiores' });
+                let arrayEmpleadosPermisosGuardar = responseData.arrayEmpleadosPermisosSuperiores.empleados_perm_gua_array;
+
+                // Obtener datos
+                let responseData_ = sendRequest({ method: 'getDataConfiguracionEmpleadosPermisosBasicos' });
+                let arrayEmpleadosPermisosFirmarLogistica = responseData_.arrayEmpleadosPermisosBasicos.empleados_perm_fir_log_array;
+
+                // Obtener user
+                let { user } = objHelper.getUser();
+
+                // Validar campo con data - que se haya firmado
+                // Validar que usuario no este registros en empleados permisos superiores - permiso guardar
+                // Validar que usuario no este registros en empleados permisos basico - permiso firmar logistica
+                if ((formulario == 216) && !arrayEmpleadosPermisosGuardar.includes(Number(user.id)) && !arrayEmpleadosPermisosFirmarLogistica.includes(Number(user.id))) {
+
+                    // Cargar Sweet Alert
+                    loadSweetAlertLibrary().then(function () {
+
+                        // Ejecutar validacion
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "La revisión de lista de materiales es antigua (formulario BIO_FRM_REVISION). No se puede guardar el registro",
+                        });
+                    });
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         function validarCamposFirmas(recordContext, mode) {
 
             // Modo editar
@@ -132,7 +179,7 @@ define(['./lib/Bio.Library.Helper', 'N'],
                 let { user } = objHelper.getUser();
 
                 // Validar campo con data - que se haya firmado
-                // Validar que usuario no este registros en empleados permisos
+                // Validar que usuario no este registros en empleados permisos superiores - permiso guardar
                 if ((firmaEmitidoPor || firmaEmitidoPorString) && !arrayEmpleadosPermisosGuardar.includes(Number(user.id))) {
 
                     // Cargar Sweet Alert

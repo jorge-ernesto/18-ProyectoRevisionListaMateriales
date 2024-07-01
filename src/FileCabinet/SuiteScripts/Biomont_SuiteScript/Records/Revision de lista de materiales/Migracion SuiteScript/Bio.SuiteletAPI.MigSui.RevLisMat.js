@@ -78,6 +78,22 @@ define(['./lib/Bio.Library.Helper', 'N'],
                                 method: method,
                                 centro_costo: centro_costo
                             };
+                        } else if (method == 'getDataConfiguracionEmpleadosPermisosBasicos') {
+
+                            // Obtener datos
+                            let { empleados_perm_fir_log_array, empleados_perm_fir_invdes_array, empleados_perm_fir_opepla_array, empleados_email_array } = objHelper.getConfiguracionEmpleadosPermisosBasicos();
+
+                            // Validar que encontro configuracion de empleados permisos
+                            if (empleados_perm_fir_log_array || empleados_perm_fir_invdes_array || empleados_perm_fir_opepla_array || empleados_email_array) {
+
+                                // Respuesta
+                                response = {
+                                    code: '200',
+                                    status: 'success',
+                                    method: method,
+                                    arrayEmpleadosPermisosBasicos: { empleados_perm_fir_log_array, empleados_perm_fir_invdes_array, empleados_perm_fir_opepla_array, empleados_email_array }
+                                };
+                            }
                         } else if (method == 'getDataConfiguracionEmpleadosPermisosSuperiores') {
 
                             // Obtener datos
