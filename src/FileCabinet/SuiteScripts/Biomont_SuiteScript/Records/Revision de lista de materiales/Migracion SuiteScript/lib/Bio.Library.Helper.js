@@ -51,7 +51,7 @@ define(['N'],
 
         /****************** Records personalizados ******************/
 
-        function getConfiguracionEmpleados() {
+        function getConfiguracionEmpleadosPermisosBasicos() {
 
             // Crear un array para almacenar los valores
             var empleadosArray = [];
@@ -64,7 +64,6 @@ define(['N'],
                     'custrecord_bio_rlm_emp_centro_costo',
                     'custrecord_bio_rlm_emp_empleado',
                     'custrecord_bio_rlm_emp_perm_firmar',
-                    'custrecord_bio_rlm_emp_perm_eliminar_fir',
                     'custrecord_bio_rlm_emp_env_email'
                 ],
                 filters: [
@@ -87,8 +86,7 @@ define(['N'],
                 let empleado_id_interno = result.getValue(columns[2]);
                 let empleado_nombre = result.getText(columns[2]);
                 let permiso_firmar = result.getValue(columns[3]);
-                let permiso_eliminar_firmas = result.getValue(columns[4]);
-                let enviar_email = result.getValue(columns[5]);
+                let enviar_email = result.getValue(columns[4]);
 
                 // Insertar informacion en array
                 empleadosArray.push({
@@ -96,7 +94,6 @@ define(['N'],
                     centro_costo: { id_interno: centro_costo_id_interno, nombre: centro_costo_nombre },
                     empleado: { id_interno: empleado_id_interno, nombre: empleado_nombre },
                     permiso_firmar: permiso_firmar,
-                    permiso_eliminar_firmas: permiso_eliminar_firmas,
                     enviar_email: enviar_email
                 });
                 return true;
@@ -110,7 +107,8 @@ define(['N'],
              * Centro de Costo: 1501 Logística
              * Permiso firmar: Si
              */
-            let empleados_perm_fir_log_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.centro_costo.id_interno == '5' && registro.permiso_firmar == true);
+            let empleados_perm_fir_log_array = [];
+            empleados_perm_fir_log_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.centro_costo.id_interno == '5' && registro.permiso_firmar == true);
             empleados_perm_fir_log_array = empleados_perm_fir_log_array.map(registro => Number(registro.empleado.id_interno));
             empleados_perm_fir_log_array = [...new Set(empleados_perm_fir_log_array)];
 
@@ -121,7 +119,8 @@ define(['N'],
              * Centro de Costo: 5501 Investigación y Desarrollo
              * Permiso firmar: Si
              */
-            let empleados_perm_fir_invdes_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.centro_costo.id_interno == '26' && registro.permiso_firmar == true);
+            let empleados_perm_fir_invdes_array = [];
+            empleados_perm_fir_invdes_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.centro_costo.id_interno == '26' && registro.permiso_firmar == true);
             empleados_perm_fir_invdes_array = empleados_perm_fir_invdes_array.map(registro => Number(registro.empleado.id_interno));
             empleados_perm_fir_invdes_array = [...new Set(empleados_perm_fir_invdes_array)];
 
@@ -132,20 +131,10 @@ define(['N'],
              * Centro de Costo: 1001 Operaciones y Planta
              * Permiso firmar: Si
              */
-            let empleados_perm_fir_opepla_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.centro_costo.id_interno == '1' && registro.permiso_firmar == true);
+            let empleados_perm_fir_opepla_array = [];
+            empleados_perm_fir_opepla_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.centro_costo.id_interno == '1' && registro.permiso_firmar == true);
             empleados_perm_fir_opepla_array = empleados_perm_fir_opepla_array.map(registro => Number(registro.empleado.id_interno));
             empleados_perm_fir_opepla_array = [...new Set(empleados_perm_fir_opepla_array)];
-
-            /**
-             * Empleados permiso eliminar firmas del cc Operaciones y Planta
-             *
-             * Subsidiaria: BIOMONT
-             * Centro de Costo: 1001 Operaciones y Planta
-             * Permiso eliminar firmas: Si
-             */
-            let empleados_perm_elifir_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.centro_costo.id_interno == '1' && registro.permiso_eliminar_firmas == true);
-            empleados_perm_elifir_array = empleados_perm_elifir_array.map(registro => Number(registro.empleado.id_interno));
-            empleados_perm_elifir_array = [...new Set(empleados_perm_elifir_array)];
 
             /**
              * Empleados enviar email
@@ -154,12 +143,83 @@ define(['N'],
              * Centro de Costo: Todos
              * Enviar email: Si
              */
-            let empleados_email_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.enviar_email == true);
+            let empleados_email_array = [];
+            empleados_email_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.enviar_email == true);
             empleados_email_array = empleados_email_array.map(registro => Number(registro.empleado.id_interno));
             empleados_email_array = [...new Set(empleados_email_array)];
 
-            // error_log('getConfiguracionEmpleados', { empleados_perm_fir_log_array, empleados_perm_fir_invdes_array, empleados_perm_fir_opepla_array, empleados_perm_elifir_array, empleados_email_array });
-            return { empleados_perm_fir_log_array, empleados_perm_fir_invdes_array, empleados_perm_fir_opepla_array, empleados_perm_elifir_array, empleados_email_array };
+            // error_log('getConfiguracionEmpleados', { empleados_perm_fir_log_array, empleados_perm_fir_invdes_array, empleados_perm_fir_opepla_array, empleados_email_array });
+            return { empleados_perm_fir_log_array, empleados_perm_fir_invdes_array, empleados_perm_fir_opepla_array, empleados_email_array };
+        }
+
+        function getConfiguracionEmpleadosPermisosSuperiores() {
+
+            // Crear un array para almacenar los valores
+            var empleadosArray = [];
+
+            // Crear una búsqueda para obtener los registros
+            var searchObj = search.create({
+                type: 'customrecord_bio_conf_rlm_perm',
+                columns: [
+                    'custrecord_bio_rlm_perm_subsidiaria',
+                    'custrecord_bio_rlm_perm_empleado',
+                    'custrecord_bio_rlm_perm_permguardar',
+                    'custrecord_bio_rlm_perm_permeliminarfir'
+                ],
+                filters: [
+                    search.createFilter({
+                        name: 'isinactive',
+                        operator: search.Operator.IS,
+                        values: 'F' // F para registros activos
+                    })
+                ]
+            });
+
+            // Ejecutar la búsqueda y recorrer los resultados
+            searchObj.run().each(function (result) {
+                // Obtener informacion
+                let { columns } = result;
+                let subsidiaria_id_interno = result.getValue(columns[0]);
+                let subsidiaria_nombre = result.getText(columns[0]);
+                let empleado_id_interno = result.getValue(columns[1]);
+                let empleado_nombre = result.getText(columns[1]);
+                let permiso_guardar = result.getValue(columns[2]);
+                let permiso_eliminar_firmas = result.getValue(columns[3]);
+
+                // Insertar informacion en array
+                empleadosArray.push({
+                    subsidiaria: { id_interno: subsidiaria_id_interno, nombre: subsidiaria_nombre },
+                    empleado: { id_interno: empleado_id_interno, nombre: empleado_nombre },
+                    permiso_guardar: permiso_guardar,
+                    permiso_eliminar_firmas: permiso_eliminar_firmas
+                });
+                return true;
+            });
+
+            /**
+             * Empleados permiso guardar
+             *
+             * Subsidiaria: BIOMONT
+             * Permiso guardar: Si
+             */
+            let empleados_perm_gua_array = [];
+            empleados_perm_gua_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.permiso_guardar == true);
+            empleados_perm_gua_array = empleados_perm_gua_array.map(registro => Number(registro.empleado.id_interno));
+            empleados_perm_gua_array = [...new Set(empleados_perm_gua_array)];
+
+            /**
+             * Empleados permiso eliminar firmas
+             *
+             * Subsidiaria: BIOMONT
+             * Permiso eliminar firmas: Si
+             */
+            let empleados_perm_eli_fir_array = [];
+            empleados_perm_eli_fir_array = empleadosArray.filter(registro => registro.subsidiaria.id_interno == '2' && registro.permiso_eliminar_firmas == true);
+            empleados_perm_eli_fir_array = empleados_perm_eli_fir_array.map(registro => Number(registro.empleado.id_interno));
+            empleados_perm_eli_fir_array = [...new Set(empleados_perm_eli_fir_array)];
+
+            // error_log('getConfiguracionEmpleadosPermisosSuperiores', { empleados_perm_gua_array, empleados_perm_eli_fir_array });
+            return { empleados_perm_gua_array, empleados_perm_eli_fir_array };
         }
 
         /****************** Data ******************/
@@ -276,7 +336,7 @@ define(['N'],
 
             // Obtener empleados
             let recipients = [];
-            let { empleados_email_array } = getConfiguracionEmpleados();
+            let { empleados_email_array } = getConfiguracionEmpleadosPermisosBasicos();
             recipients = recipients.concat(empleados_email_array);
 
             // Validar regla "Se permite un máximo de 10 destinatarios ( options.recipients+ options.cc+ ).options.bcc"
@@ -391,7 +451,8 @@ define(['N'],
             getCountrySubsidiary,
             getDataUser,
             // Revisión de lista de materiales - Records personalizados
-            getConfiguracionEmpleados,
+            getConfiguracionEmpleadosPermisosBasicos,
+            getConfiguracionEmpleadosPermisosSuperiores,
             // Revisión de lista de materiales - Data
             getDetalleRevisionListaMateriales,
             // Revisión de lista de materiales - Email

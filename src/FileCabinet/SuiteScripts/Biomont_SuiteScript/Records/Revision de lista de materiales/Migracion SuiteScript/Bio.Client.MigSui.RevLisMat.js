@@ -30,8 +30,18 @@ define(['./lib/Bio.Library.Helper', 'N'],
          * Formularios
          *
          * 353: BIO_FRM_REVISION_LISTA_MATERIALES
+         * 216: BIO_FRM_REVISION
+         * 356: BIO_FRM_REVISION_1
          */
-        const forms = [353];
+        const forms = [353, 216, 356];
+
+        /**
+         * Formularios inactivos
+         *
+         * 216: BIO_FRM_REVISION
+         * 356: BIO_FRM_REVISION_1
+         */
+        const forms_inactive = [216, 356];
 
         /******************/
 
@@ -62,6 +72,9 @@ define(['./lib/Bio.Library.Helper', 'N'],
 
                 // Deshabilitar campos firmas
                 deshabilitarCamposFirmas(recordContext, mode);
+
+                // Deshabilitar formularios inactivos
+                deshabilitarFormulariosInactivos(recordContext, mode);
             }
         }
 
@@ -93,6 +106,11 @@ define(['./lib/Bio.Library.Helper', 'N'],
                 if (!validarCamposFirmas(recordContext, mode)) {
                     return false;
                 }
+
+                // Validar formularios inactivos
+                if (!validarFormulariosInactivos(recordContext, mode)) {
+                    return false;
+                }
             }
 
             return true;
@@ -106,13 +124,47 @@ define(['./lib/Bio.Library.Helper', 'N'],
             // https://6462530-sb1.app.netsuite.com/app/help/helpcenter.nl?fid=section_4625600928.html
 
             // Deshabilitar campos
-            // Formulario "BIO_FRM_REVISION_LISTA_MATERIALES"
+            // Formulario "BIO_FRM_REVISION_LISTA_MATERIALES", "BIO_FRM_REVISION", "BIO_FRM_REVISION_1"
             if (recordContext.getField('custrecord_bio_rlm_usu_fir_emitido_por')) recordContext.getField('custrecord_bio_rlm_usu_fir_emitido_por').isDisabled = true;  // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_fec_fir_emitido_por')) recordContext.getField('custrecord_bio_rlm_fec_fir_emitido_por').isDisabled = true;  // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_usu_fir_revisado_por')) recordContext.getField('custrecord_bio_rlm_usu_fir_revisado_por').isDisabled = true; // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_fec_fir_revisado_por')) recordContext.getField('custrecord_bio_rlm_fec_fir_revisado_por').isDisabled = true; // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_usu_fir_aprobado_por')) recordContext.getField('custrecord_bio_rlm_usu_fir_aprobado_por').isDisabled = true; // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_fec_fir_aprobado_por')) recordContext.getField('custrecord_bio_rlm_fec_fir_aprobado_por').isDisabled = true; // Se deshabilita
+        }
+
+        function deshabilitarFormulariosInactivos(recordContext, mode) {
+
+            // Modo editar
+            if (mode == 'edit') {
+
+                // Obtener datos
+                let formulario = recordContext.getValue('customform');
+
+                // Obtener datos
+                let responseData = sendRequest({ method: 'getDataConfiguracionEmpleadosPermisosSuperiores' });
+                let arrayEmpleadosPermisosGuardar = responseData.arrayEmpleadosPermisosSuperiores.empleados_perm_gua_array;
+
+                // Obtener datos
+                let responseData_ = sendRequest({ method: 'getDataConfiguracionEmpleadosPermisosBasicos' });
+                let arrayEmpleadosPermisosFirmarLogistica = responseData_.arrayEmpleadosPermisosBasicos.empleados_perm_fir_log_array;
+
+                // Obtener user
+                let { user } = objHelper.getUser();
+
+                // Validar campo formulario - que sea formulario inactivo
+                // Validar que usuario no este registros en empleados permisos superiores - permiso guardar
+                // Validar que usuario no este registros en empleados permisos basico - permiso firmar logistica
+                if (forms_inactive.includes(Number(formulario)) && !arrayEmpleadosPermisosGuardar.includes(Number(user.id)) && !arrayEmpleadosPermisosFirmarLogistica.includes(Number(user.id))) {
+
+                    // Obtener campo y deshabilitarlo
+                    // https://6462530-sb1.app.netsuite.com/app/help/helpcenter.nl?fid=section_4625600928.html
+
+                    // Deshabilitar campos
+                    // Formulario "BIO_FRM_REVISION", "BIO_FRM_REVISION_1"
+                    if (recordContext.getField('customform')) recordContext.getField('customform').isDisabled = true; // Se deshabilita
+                }
+            }
         }
 
         function validarCamposFirmas(recordContext, mode) {
@@ -125,10 +177,15 @@ define(['./lib/Bio.Library.Helper', 'N'],
                 let firmaEmitidoPorString = recordContext.getValue('custrecord211');
 
                 // Obtener datos
-                let responseData = sendRequest({ method: 'getDataUser' });
+                let responseData = sendRequest({ method: 'getDataConfiguracionEmpleadosPermisosSuperiores' });
+                let arrayEmpleadosPermisosGuardar = responseData.arrayEmpleadosPermisosSuperiores.empleados_perm_gua_array;
 
-                // Validar campo con data - que se haya firmado
-                if ((firmaEmitidoPor || firmaEmitidoPorString) && responseData.centro_costo != '16') {
+                // Obtener user
+                let { user } = objHelper.getUser();
+
+                // Validar campo firma - que se haya firmado
+                // Validar que usuario no este registros en empleados permisos superiores - permiso guardar
+                if ((firmaEmitidoPor || firmaEmitidoPorString) && !arrayEmpleadosPermisosGuardar.includes(Number(user.id))) {
 
                     // Cargar Sweet Alert
                     loadSweetAlertLibrary().then(function () {
@@ -138,6 +195,48 @@ define(['./lib/Bio.Library.Helper', 'N'],
                             icon: "error",
                             title: "Oops...",
                             text: "La revisión de lista de materiales se emitió. No se puede guardar el registro",
+                        });
+                    });
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function validarFormulariosInactivos(recordContext, mode) {
+
+            // Modo editar
+            if (mode == 'edit') {
+
+                // Obtener datos
+                let formulario = recordContext.getValue('customform');
+
+                // Obtener datos
+                let responseData = sendRequest({ method: 'getDataConfiguracionEmpleadosPermisosSuperiores' });
+                let arrayEmpleadosPermisosGuardar = responseData.arrayEmpleadosPermisosSuperiores.empleados_perm_gua_array;
+
+                // Obtener datos
+                let responseData_ = sendRequest({ method: 'getDataConfiguracionEmpleadosPermisosBasicos' });
+                let arrayEmpleadosPermisosFirmarLogistica = responseData_.arrayEmpleadosPermisosBasicos.empleados_perm_fir_log_array;
+
+                // Obtener user
+                let { user } = objHelper.getUser();
+
+                // Validar campo formulario - que sea formulario inactivo
+                // Validar que usuario no este registros en empleados permisos superiores - permiso guardar
+                // Validar que usuario no este registros en empleados permisos basico - permiso firmar logistica
+                if (forms_inactive.includes(Number(formulario)) && !arrayEmpleadosPermisosGuardar.includes(Number(user.id)) && !arrayEmpleadosPermisosFirmarLogistica.includes(Number(user.id))) {
+
+                    // Cargar Sweet Alert
+                    loadSweetAlertLibrary().then(function () {
+
+                        // Ejecutar validacion
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Formulario inactivo detectado. No se puede guardar el registro",
                         });
                     });
 
