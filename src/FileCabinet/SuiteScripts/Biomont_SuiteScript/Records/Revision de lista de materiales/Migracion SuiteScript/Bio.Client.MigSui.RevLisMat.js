@@ -120,6 +120,12 @@ define(['./lib/Bio.Library.Helper', 'N'],
 
             // Deshabilitar campos
             // Formularios "BIO_FRM_REVISION_LISTA_MATERIALES", "BIO_FRM_REVISION", "BIO_FRM_REVISION_1"
+            if (recordContext.getField('custrecord211')) recordContext.getField('custrecord211').isDisabled = true;  // Se deshabilita
+            if (recordContext.getField('custrecord212')) recordContext.getField('custrecord212').isDisabled = true;  // Se deshabilita
+            if (recordContext.getField('custrecord213')) recordContext.getField('custrecord213').isDisabled = true;  // Se deshabilita
+            if (recordContext.getField('custrecord214')) recordContext.getField('custrecord214').isDisabled = true;  // Se deshabilita
+            if (recordContext.getField('custrecord215')) recordContext.getField('custrecord215').isDisabled = true;  // Se deshabilita
+            if (recordContext.getField('custrecord216')) recordContext.getField('custrecord216').isDisabled = true;  // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_usu_fir_emitido_por')) recordContext.getField('custrecord_bio_rlm_usu_fir_emitido_por').isDisabled = true;  // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_fec_fir_emitido_por')) recordContext.getField('custrecord_bio_rlm_fec_fir_emitido_por').isDisabled = true;  // Se deshabilita
             if (recordContext.getField('custrecord_bio_rlm_usu_fir_revisado_por')) recordContext.getField('custrecord_bio_rlm_usu_fir_revisado_por').isDisabled = true; // Se deshabilita
