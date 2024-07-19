@@ -14,8 +14,13 @@
       <feature required="true">SUBSIDIARIES</feature>
     </features>
     <objects>
+      <object>custrecord_bio_rlm_usu_fir_aprobado_por</object>
+      <object>custrecord_bio_rlm_usu_fir_revisado_por</object>
+      <object>custrecord215</object>
       <object>custrecordbio_cam_revision_observacione</object>
+      <object>custrecord213</object>
       <object>custrecord211</object>
+      <object>custrecord_bio_rlm_usu_fir_emitido_por</object>
       <object>customrole1067</object>
       <object>custrecord184</object>
     </objects>

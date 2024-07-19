@@ -72,9 +72,6 @@ define(['./lib/Bio.Library.Helper', 'N'],
 
                 // Deshabilitar campos firmas
                 deshabilitarCamposFirmas(recordContext, mode);
-
-                // Deshabilitar formularios inactivos
-                deshabilitarCamposFormulariosInactivos(recordContext, mode);
             }
         }
 
@@ -134,39 +131,6 @@ define(['./lib/Bio.Library.Helper', 'N'],
             if (recordContext.getField('custrecord_bio_rlm_fec_fir_aprobado_por')) recordContext.getField('custrecord_bio_rlm_fec_fir_aprobado_por').isDisabled = true; // Se deshabilita
         }
 
-        function deshabilitarCamposFormulariosInactivos(recordContext, mode) {
-
-            // Modo editar
-            if (mode == 'edit') {
-
-                // Obtener datos
-                let formulario = recordContext.getValue('customform');
-
-                // Obtener datos
-                let responseData = sendRequest({ method: 'getDataConfiguracionEmpleadosPermisosBasicos' });
-                let arrayEmpleadosPermisosFirmarLogistica = responseData.arrayEmpleadosPermisosBasicos.empleados_perm_fir_log_array;
-
-                // Obtener datos
-                let responseData_ = sendRequest({ method: 'getDataConfiguracionEmpleadosPermisosSuperiores' });
-                let arrayEmpleadosPermisosGuardar = responseData_.arrayEmpleadosPermisosSuperiores.empleados_perm_gua_array;
-
-                // Obtener user
-                let { user } = objHelper.getUser();
-
-                // Validar campo formulario - que sea formulario inactivo
-                // Validar que usuario no este registros en empleados permisos
-                if (forms_inactive.includes(Number(formulario)) && !arrayEmpleadosPermisosFirmarLogistica.includes(Number(user.id)) && !arrayEmpleadosPermisosGuardar.includes(Number(user.id))) {
-
-                    // Obtener campo y deshabilitarlo
-                    // https://6462530-sb1.app.netsuite.com/app/help/helpcenter.nl?fid=section_4625600928.html
-
-                    // Deshabilitar campos
-                    // Formularios "BIO_FRM_REVISION", "BIO_FRM_REVISION_1"
-                    if (recordContext.getField('customform')) recordContext.getField('customform').isDisabled = true; // Se deshabilita
-                }
-            }
-        }
-
         function validarCamposFirmas_CambiosSublista(recordContext, mode) {
 
             // Modo editar
@@ -203,16 +167,15 @@ define(['./lib/Bio.Library.Helper', 'N'],
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",
-                            text: "La revisión de lista de materiales se emitió y hubieron cambios en la sublista. No se puede guardar el registro",
+                            text: "La revisión de lista de materiales se emitió y hubieron cambios en la sublista. No puede guardar el registro",
                         });
                     });
 
                     return false;
                 }
 
-                // Validar campo formulario - que sea formulario inactivo
                 // Validar que usuario no este registros en empleados permisos
-                if (forms_inactive.includes(Number(formulario)) && !arrayEmpleadosPermisosFirmarLogistica.includes(Number(user.id)) && !arrayEmpleadosPermisosGuardar.includes(Number(user.id))) {
+                if (!arrayEmpleadosPermisosFirmarLogistica.includes(Number(user.id)) && !arrayEmpleadosPermisosGuardar.includes(Number(user.id))) {
 
                     // Cargar Sweet Alert
                     loadSweetAlertLibrary().then(function () {
@@ -221,7 +184,7 @@ define(['./lib/Bio.Library.Helper', 'N'],
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",
-                            text: "Formulario inactivo detectado. No se puede guardar el registro",
+                            text: "No esta autorizado. No puede guardar el registro",
                         });
                     });
 
