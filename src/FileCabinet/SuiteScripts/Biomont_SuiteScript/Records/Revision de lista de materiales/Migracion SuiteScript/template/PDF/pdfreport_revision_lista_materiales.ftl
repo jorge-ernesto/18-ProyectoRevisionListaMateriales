@@ -106,7 +106,7 @@
 						<b>Laboratorios Biomont S.A.</b>
 					</th>
 					<th colspan="5" align="right" valign="middle">
-						<span class="fs15"><b>F-LOG.004.06</b></span>
+						<#--  <span class="fs15"><b>F-LOG.004.06</b></span>  -->
 					</th>
 				</tr>
                 <tr>
